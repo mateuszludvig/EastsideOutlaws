@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Eastside Outlaws – Kassen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0a;--surface:#111111;--card:#161616;--card-hover:#1c1c1c;
+  --border:#222222;--border-soft:#1e1e1e;
+  --orange:#f05a1a;--orange-dim:#a33a08;
+  --green:#27c97a;--green-dim:#0f5c35;
+  --blue:#4a9ede;--blue-dim:#163a5c;
+  --gold:#d4a843;--gold-dim:#6b4e12;
+  --red:#e8463a;--text:#ede8e0;--text-2:#9a9088;--text-3:#555048;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:14px;}
+.logo-emblem{width:36px;height:36px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;flex-shrink:0;}
+.logo-text{display:flex;flex-direction:column;}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:var(--text);line-height:1;}
+.logo-sub{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;color:var(--orange);text-transform:uppercase;line-height:1;margin-top:2px;}
+.header-right{display:flex;align-items:center;gap:16px;}
+.header-month{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;color:var(--text-2);text-transform:uppercase;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange);}
+.sync-indicator{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:3px;border:1px solid var(--border);color:var(--text-3);}
+.sync-indicator.saving{border-color:var(--orange);color:var(--orange);}
+.sync-indicator.saved{border-color:var(--green-dim);color:var(--green);}
+.sync-indicator.error{border-color:var(--red);color:var(--red);}
+
+.container{max-width:900px;margin:0 auto;padding:2.5rem 2rem 6rem;}
+.hero{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2rem 2.5rem;margin-bottom:1.5rem;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent 60%);}
+.hero::after{content:'KASSEN';position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:80px;letter-spacing:6px;color:var(--border);pointer-events:none;user-select:none;}
+.hero-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:0;position:relative;z-index:1;}
+.hero-saldo{padding-right:2.5rem;border-right:1px solid var(--border);margin-right:2.5rem;}
+.hero-saldo-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--text-3);margin-bottom:4px;}
+.hero-saldo-value{font-family:'Bebas Neue',sans-serif;font-size:56px;letter-spacing:2px;line-height:1;color:var(--orange);}
+.hero-saldo-value.neg{color:var(--red);}
+.stat{display:flex;flex-direction:column;justify-content:center;}
+.stat-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;}
+.stat-value{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;}
+.sv-green{color:var(--green);}.sv-red{color:var(--red);}.sv-white{color:var(--text);}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--text-3);display:flex;align-items:center;gap:10px;}
+.section-title::before{content:'';display:block;width:16px;height:1px;background:var(--orange);}
+.members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px;margin-bottom:2.5rem;}
+.member-card{background:var(--card);border:1px solid var(--border-soft);border-radius:6px;padding:1.1rem;display:flex;flex-direction:column;gap:12px;transition:border-color 0.2s,transform 0.15s,box-shadow 0.2s;}
+.member-card:hover{border-color:var(--border);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+.member-card.c-green{border-color:var(--green-dim);background:linear-gradient(135deg,var(--card) 60%,rgba(39,201,122,0.04));box-shadow:inset 0 0 0 1px var(--green-dim);}
+.member-card.c-blue{border-color:var(--blue-dim);background:linear-gradient(135deg,var(--card) 60%,rgba(74,158,222,0.04));}
+.member-card.c-gold{border-color:var(--gold-dim);background:linear-gradient(135deg,var(--card) 60%,rgba(212,168,67,0.04));}
+.member-top{display:flex;align-items:center;gap:11px;}
+.avatar{width:38px;height:38px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;position:relative;overflow:hidden;}
+.avatar::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent);}
+.name-display{font-size:14px;font-weight:600;color:var(--text);line-height:1.2;}
+.member-status{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:2px;display:flex;align-items:center;gap:5px;}
+.member-status::before{content:'';display:block;width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.s-green{color:var(--green);}.s-green::before{background:var(--green);box-shadow:0 0 5px var(--green);}
+.s-blue{color:var(--blue);}.s-blue::before{background:var(--blue);}
+.s-gold{color:var(--gold);}.s-gold::before{background:var(--gold);}
+.s-red{color:var(--red);}.s-red::before{background:var(--red);}
+.s-muted{color:var(--text-3);}.s-muted::before{background:var(--text-3);}
+.paid-months{display:flex;flex-wrap:wrap;gap:4px;}
+.chip{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:3px;cursor:pointer;border:1px solid transparent;transition:all 0.12s;user-select:none;}
+.ch-prepaid{background:rgba(212,168,67,0.15);color:var(--gold);border-color:var(--gold-dim);}
+.ch-past-paid{background:rgba(39,201,122,0.1);color:var(--green);border-color:var(--green-dim);}
+.ch-past-paid:hover{background:rgba(232,70,58,0.15);color:var(--red);border-color:#5c1c18;}
+.ch-past-unpaid{background:transparent;color:var(--text-3);border-color:var(--border);}
+.ch-past-unpaid:hover{border-color:var(--text-2);color:var(--text-2);}
+.ch-cur-paid{background:var(--green);color:#000;border-color:var(--green);font-weight:700;box-shadow:0 0 8px rgba(39,201,122,0.3);}
+.ch-cur-paid:hover{background:var(--red);border-color:var(--red);color:#fff;box-shadow:none;}
+.ch-cur-unpaid{background:transparent;color:var(--orange);border-color:var(--orange);}
+.ch-cur-unpaid:hover{background:var(--orange);color:#fff;}
+.ch-future-paid{background:rgba(74,158,222,0.12);color:var(--blue);border-color:var(--blue-dim);}
+.ch-future-paid:hover{background:rgba(232,70,58,0.15);color:var(--red);border-color:#5c1c18;}
+.card-actions{display:flex;justify-content:space-between;align-items:center;padding-top:4px;border-top:1px solid var(--border-soft);}
+.edit-btn,.del-btn{font-size:11px;background:none;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:color 0.15s;padding:0;}
+.edit-btn{color:var(--text-3);}.edit-btn:hover{color:var(--text);}
+.del-btn{color:var(--text-3);}.del-btn:hover{color:var(--red);}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2rem;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;position:relative;}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent 60%);border-radius:8px 8px 0 0;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:var(--text);margin-bottom:1.5rem;}
+.modal-field{margin-bottom:1.25rem;}
+.modal-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--text-3);margin-bottom:7px;display:block;}
+.modal-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:10px 14px;outline:none;transition:border-color 0.15s;}
+.modal-input:focus{border-color:var(--orange);}
+.modal-hint{font-size:12px;color:var(--text-3);margin-top:8px;line-height:1.5;font-style:italic;}
+.modal-months{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.modal-month-btn{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-2);transition:all 0.12s;}
+.modal-month-btn.sel-prepaid{background:rgba(212,168,67,0.15);border-color:var(--gold-dim);color:var(--gold);}
+.modal-month-btn.sel-paid{background:rgba(39,201,122,0.1);border-color:var(--green-dim);color:var(--green);}
+.modal-month-btn:hover{border-color:var(--orange);color:var(--orange);}
+.modal-legend{display:flex;gap:14px;margin-bottom:10px;flex-wrap:wrap;}
+.legend-item{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;display:flex;align-items:center;gap:6px;color:var(--text-2);}
+.dot{width:8px;height:8px;border-radius:2px;display:inline-block;}
+.modal-btns{display:flex;gap:10px;margin-top:1.5rem;}
+.modal-btns button{flex:1;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all 0.15s;}
+.btn-save{background:var(--orange);border:1px solid var(--orange);color:#fff;}.btn-save:hover{background:var(--orange-dim);}
+.btn-cancel{background:transparent;border:1px solid var(--border);color:var(--text-2);}.btn-cancel:hover{color:var(--text);border-color:var(--text-3);}
+.btn-delete{background:transparent;border:1px solid var(--border);color:var(--red);}.btn-delete:hover{background:rgba(232,70,58,0.1);border-color:var(--red);}
+.type-toggle{display:flex;border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:1rem;}
+.type-btn{flex:1;padding:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;background:transparent;color:var(--text-2);cursor:pointer;transition:all 0.15s;}
+.type-btn.active-ud{background:rgba(232,70,58,0.15);color:var(--red);}
+.type-btn.active-ind{background:rgba(39,201,122,0.12);color:var(--green);}
+.form-block{background:var(--surface);border:1px solid var(--border-soft);border-radius:6px;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+.form-row{display:flex;gap:8px;flex-wrap:wrap;}
+.form-row input{flex:1;min-width:120px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:9px 12px;outline:none;transition:border-color 0.15s;}
+.form-row input:focus{border-color:var(--orange);}
+.form-row input::placeholder{color:var(--text-3);}
+.form-row button{padding:9px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--orange);background:var(--orange);color:#fff;cursor:pointer;border-radius:4px;white-space:nowrap;transition:all 0.15s;}
+.form-row button:hover{background:var(--orange-dim);border-color:var(--orange-dim);}
+.form-row button.ghost{background:transparent;color:var(--text-2);border-color:var(--border);}
+.form-row button.ghost:hover{color:var(--red);border-color:var(--red);background:rgba(232,70,58,0.05);}
+.log-wrap{background:var(--surface);border:1px solid var(--border-soft);border-radius:6px;overflow:hidden;margin-bottom:1rem;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-3);text-align:left;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--card);}
+tbody td{padding:11px 16px;border-bottom:1px solid var(--border-soft);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,0.015);}
+.a-pos{color:var(--green);font-family:'Bebas Neue',sans-serif;font-size:16px;text-align:right;letter-spacing:1px;}
+.a-neg{color:var(--red);font-family:'Bebas Neue',sans-serif;font-size:16px;text-align:right;letter-spacing:1px;}
+.tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:rgba(255,255,255,0.04);color:var(--text-3);border:1px solid var(--border);}
+.empty-td{text-align:center;padding:2.5rem !important;color:var(--text-3);font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase;font-size:12px;}
+.row-edit-btn{background:none;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);padding:2px 6px;border-radius:2px;transition:color 0.12s;}
+.row-edit-btn:hover{color:var(--text);}
+.export-btn{display:block;width:100%;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;border-radius:4px;transition:all 0.15s;}
+.export-btn:hover{color:var(--text);border-color:var(--text-3);}
+@media(max-width:640px){
+  .hero-grid{grid-template-columns:1fr 1fr;gap:1.25rem;}
+  .hero-saldo{grid-column:1/-1;border-right:none;border-bottom:1px solid var(--border);padding-right:0;margin-right:0;padding-bottom:1rem;margin-bottom:0.25rem;}
+  .hero-saldo-value{font-size:44px;}
+  .hero::after{display:none;}
+  .header{padding:0 1.25rem;}
+  .container{padding:1.5rem 1.25rem 5rem;}
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo">
+    <div class="logo-emblem">EO</div>
+    <div class="logo-text">
+      <div class="logo-main">Eastside Outlaws</div>
+      <div class="logo-sub">Kassen</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="sync-indicator" id="sync-status">Henter data...</span>
+    <div class="header-dot"></div>
+    <span class="header-month" id="header-month"></span>
+  </div>
+</header>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-grid">
+      <div class="hero-saldo">
+        <div class="hero-saldo-label">Samlet Saldo</div>
+        <div class="hero-saldo-value" id="m-saldo">0 kr</div>
+      </div>
+      <div class="stat"><div class="stat-label">Startsaldo apr</div><div class="stat-value sv-white">4.707,5 kr</div></div>
+      <div class="stat"><div class="stat-label">Ind fra maj</div><div class="stat-value sv-green" id="m-ind">0 kr</div></div>
+      <div class="stat"><div class="stat-label">Ud fra maj</div><div class="stat-value sv-red" id="m-ud">0 kr</div></div>
+    </div>
+  </div>
+
+  <div class="section-head" style="margin-bottom:12px;">
+    <span class="section-title">Medlemmer</span>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;color:var(--orange);text-transform:uppercase;" id="month-label"></span>
+  </div>
+  <div class="members-grid" id="members-grid"></div>
+
+  <div class="section-head"><span class="section-title">Tilføj Medlem</span></div>
+  <div class="form-block">
+    <div class="form-row">
+      <input type="text" id="new-name" placeholder="Navn på nyt medlem" onkeydown="if(event.key==='Enter')addMember()" />
+      <button onclick="addMember()">+ Tilføj</button>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="section-title">Registrer Postering</span></div>
+  <div class="form-block">
+    <div class="type-toggle">
+      <button class="type-btn active-ud" id="type-ud" onclick="setEntryType('ud')">− Udgift</button>
+      <button class="type-btn" id="type-ind" onclick="setEntryType('ind')">+ Indtægt</button>
+    </div>
+    <div class="form-row">
+      <input type="text" id="ent-desc" placeholder="Beskrivelse (fx brændstof, sponsorbidrag)" />
+      <input type="number" id="ent-amt" placeholder="Beløb kr" min="1" style="flex:0 0 130px;" onkeydown="if(event.key==='Enter')addEntry()" />
+      <button id="ent-btn" onclick="addEntry()">Tilføj</button>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="section-title">Alle Posteringer</span></div>
+  <div class="log-wrap">
+    <table>
+      <thead><tr><th>Beskrivelse</th><th>Måned</th><th>Type</th><th style="text-align:right;">Beløb</th><th></th></tr></thead>
+      <tbody id="log-body"><tr><td colspan="5" class="empty-td">Henter posteringer...</td></tr></tbody>
+    </table>
+  </div>
+  <button class="export-btn" onclick="exportCSV()">⬇ &nbsp;Download komplet log som CSV</button>
+</div>
+
+<!-- MEMBER MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Rediger Medlem</div>
+    <div class="modal-field">
+      <label class="modal-label">Navn</label>
+      <input class="modal-input" id="modal-name" type="text" />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Betalinger</label>
+      <div class="modal-legend">
+        <span class="legend-item"><span class="dot" style="background:var(--green);"></span>Betalt — tæller i regnskab</span>
+        <span class="legend-item"><span class="dot" style="background:var(--gold);"></span>Forudbetalt — i startsaldo</span>
+      </div>
+      <p class="modal-hint">Klik én gang = betalt · Klik igen = forudbetalt (i startsaldo) · Klik tredje = fjern</p>
+      <div class="modal-months" id="modal-months"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-save" onclick="saveModal()">Gem ændringer</button>
+      <button class="btn-cancel" onclick="closeModal()">Annuller</button>
+    </div>
+  </div>
+</div>
+
+<!-- ENTRY MODAL -->
+<div class="modal-overlay" id="entry-modal" onclick="if(event.target===this)closeEntryModal()">
+  <div class="modal">
+    <div class="modal-title">Rediger Postering</div>
+    <div class="modal-field">
+      <label class="modal-label">Beskrivelse</label>
+      <input class="modal-input" id="em-desc" type="text" />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Type</label>
+      <div class="type-toggle">
+        <button class="type-btn active-ud" id="em-type-ud" onclick="setEMType('ud')">− Udgift</button>
+        <button class="type-btn" id="em-type-ind" onclick="setEMType('ind')">+ Indtægt</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Beløb (kr)</label>
+      <input class="modal-input" id="em-amt" type="number" min="1" />
+    </div>
+    <div class="modal-btns">
+      <button class="btn-save" onclick="saveEntryModal()">Gem ændringer</button>
+      <button class="btn-delete" onclick="deleteEntry()">Slet postering</button>
+      <button class="btn-cancel" onclick="closeEntryModal()">Annuller</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://uidgsgkxevfrnnnjvjzt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpZGdzZ2t4ZXZmcm5ubmp2anp0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODU4NTU5NiwiZXhwIjoyMDk0MTYxNTk2fQ.rdmU1f_roU-FWk24wAsR-EkKdwJUGaakYa6XA0IMFsI';
+const API = SUPABASE_URL + '/rest/v1/kassen';
+const HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
+
+const RATE = 200, STARTSALDO = 4707.5, START = {y:2026,m:4};
+const DA_MONTHS = ['januar','februar','marts','april','maj','juni','juli','august','september','oktober','november','december'];
+const AVCOLS = [
+  {bg:'#1a2e45',txt:'#5b9bd5'},{bg:'#162e1f',txt:'#27c97a'},
+  {bg:'#2e1a0a',txt:'#f05a1a'},{bg:'#2e1210',txt:'#e8463a'},
+  {bg:'#1e1630',txt:'#9b80e0'},{bg:'#1e2810',txt:'#9ac84a'},
+  {bg:'#0f2020',txt:'#4ecdc4'},{bg:'#281430',txt:'#e07ab0'},
+];
+
+const DEFAULT_MEMBERS = [
+  {id:1,name:'Rasmus Hansen'},{id:2,name:'Michael Christensen'},
+  {id:3,name:'Jesper Larsen'},{id:4,name:'Thomas Nielsen'},{id:5,name:'Brian Pedersen'},
+];
+
+let members = [...DEFAULT_MEMBERS];
+let payments = [], entries = [];
+let nextId = 6, nextEntryId = 1;
+let editingId = null, modalStates = {};
+let entryType = 'ud', editingEntryId = null, emType = 'ud';
+let saveTimer = null;
+
+const mkKey = (y,m) => y+'-'+String(m+1).padStart(2,'0');
+const parseKey = k => { const [y,m]=k.split('-'); return {y:+y,m:+m-1}; };
+const keyLabel = k => { const {y,m}=parseKey(k); return DA_MONTHS[m][0].toUpperCase()+DA_MONTHS[m].slice(1)+' '+y; };
+const keyShort = k => keyLabel(k).split(' ')[0].slice(0,3).toUpperCase();
+const initials = n => n.split(' ').filter(Boolean).map(w=>w[0]).join('').toUpperCase().slice(0,2)||'??';
+const fmt = n => Math.abs(n).toLocaleString('da-DK')+' kr';
+const avcol = id => AVCOLS[id % AVCOLS.length];
+function curKey() { const n=new Date(); return mkKey(n.getFullYear(),n.getMonth()); }
+function getMonths() {
+  const now=new Date(),months=[];
+  let y=START.y,m=START.m;
+  while(y<now.getFullYear()||(y===now.getFullYear()&&m<=now.getMonth())) {
+    months.push(mkKey(y,m)); m++; if(m>11){m=0;y++;}
+  }
+  return months;
+}
+function memberMonths(memberId) {
+  const base=getMonths();
+  const extra=payments.filter(p=>p.memberId===memberId&&p.monthKey>base[base.length-1]).map(p=>p.monthKey);
+  return [...new Set([...base,...extra])].sort();
+}
+function getState(memberId,key) {
+  const p=payments.find(p=>p.memberId===memberId&&p.monthKey===key);
+  return p?p.state:null;
+}
+
+function setSync(state,text) {
+  const el=document.getElementById('sync-status');
+  el.className='sync-indicator'+( state?' '+state:'');
+  el.textContent=text;
+}
+
+async function loadFromDB() {
+  try {
+    setSync('','Henter data...');
+    const res=await fetch(API+'?id=eq.main',{headers:HEADERS});
+    const rows=await res.json();
+    if(rows&&rows[0]&&rows[0].data&&Object.keys(rows[0].data).length>0) {
+      const d=rows[0].data;
+      members=d.members||DEFAULT_MEMBERS;
+      payments=d.payments||[];
+      entries=d.entries||[];
+      nextId=d.nextId||6;
+      nextEntryId=d.nextEntryId||1;
+    }
+    setSync('saved','Synkroniseret');
+  } catch(e) {
+    setSync('error','Forbindelsesfejl');
+  }
+  render();
+}
+
+async function saveToDB() {
+  setSync('saving','Gemmer...');
+  try {
+    const data={members,payments,entries,nextId,nextEntryId};
+    await fetch(API+'?id=eq.main',{
+      method:'PATCH',
+      headers:{...HEADERS,'Prefer':'return=minimal'},
+      body:JSON.stringify({data,updated_at:new Date().toISOString()})
+    });
+    setSync('saved','Gemt ✓');
+  } catch(e) {
+    setSync('error','Gem fejlede');
+  }
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(saveToDB,600);
+}
+
+function quickToggle(memberId,key) {
+  const idx=payments.findIndex(p=>p.memberId===memberId&&p.monthKey===key);
+  if(idx>=0){if(payments[idx].state==='prepaid')return;payments.splice(idx,1);}
+  else payments.push({memberId,monthKey:key,state:'paid'});
+  scheduleSave(); render();
+}
+
+function addMember() {
+  const inp=document.getElementById('new-name'),name=inp.value.trim();
+  if(!name)return;
+  members.push({id:nextId++,name}); inp.value=''; scheduleSave(); render();
+}
+function removeMember(id) {
+  if(!confirm('Slet dette medlem?'))return;
+  members=members.filter(m=>m.id!==id); payments=payments.filter(p=>p.memberId!==id); scheduleSave(); render();
+}
+function setEntryType(t) {
+  entryType=t;
+  document.getElementById('type-ud').className='type-btn'+(t==='ud'?' active-ud':'');
+  document.getElementById('type-ind').className='type-btn'+(t==='ind'?' active-ind':'');
+  document.getElementById('ent-btn').textContent=t==='ud'?'Tilføj udgift':'Tilføj indtægt';
+}
+function addEntry() {
+  const desc=document.getElementById('ent-desc').value.trim();
+  const amt=parseFloat(document.getElementById('ent-amt').value);
+  if(!desc||isNaN(amt)||amt<=0)return;
+  entries.push({id:nextEntryId++,desc,amount:amt,type:entryType,monthKey:curKey()});
+  document.getElementById('ent-desc').value=''; document.getElementById('ent-amt').value='';
+  scheduleSave(); render();
+}
+function openModal(id) {
+  editingId=id;
+  const mem=members.find(m=>m.id===id);
+  document.getElementById('modal-title').textContent='Rediger: '+mem.name;
+  document.getElementById('modal-name').value=mem.name;
+  modalStates={};
+  payments.filter(p=>p.memberId===id).forEach(p=>{modalStates[p.monthKey]=p.state;});
+  renderModalMonths();
+  document.getElementById('modal').classList.add('open');
+}
+function renderModalMonths() {
+  const ck=curKey(),base=getMonths();
+  const extra=Object.keys(modalStates).filter(k=>!base.includes(k));
+  const all=[...new Set([...base,...extra])].sort();
+  const last=all[all.length-1];
+  const {y,m}=parseKey(last);
+  const nk=m===11?mkKey(y+1,0):mkKey(y,m+1);
+  if(!all.includes(nk))all.push(nk);
+  document.getElementById('modal-months').innerHTML=all.map(k=>{
+    const state=modalStates[k]||null;
+    let cls=state==='prepaid'?'sel-prepaid':state==='paid'?'sel-paid':'';
+    const label=keyShort(k)+' '+parseKey(k).y.toString().slice(2);
+    return `<button class="modal-month-btn ${cls}" onclick="cycleModalMonth('${k}')">${label}${k>ck?' ↑':''}</button>`;
+  }).join('');
+}
+function cycleModalMonth(key) {
+  const cur=modalStates[key]||null;
+  if(!cur)modalStates[key]='paid';
+  else if(cur==='paid')modalStates[key]='prepaid';
+  else delete modalStates[key];
+  renderModalMonths();
+}
+function saveModal() {
+  const name=document.getElementById('modal-name').value.trim();
+  if(!name)return;
+  const mem=members.find(m=>m.id===editingId);
+  if(mem)mem.name=name;
+  payments=payments.filter(p=>p.memberId!==editingId);
+  Object.entries(modalStates).forEach(([key,state])=>{payments.push({memberId:editingId,monthKey:key,state});});
+  closeModal(); scheduleSave(); render();
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); editingId=null; modalStates={}; }
+function openEntryModal(id) {
+  const e=entries.find(e=>e.id===id); if(!e)return;
+  editingEntryId=id;
+  document.getElementById('em-desc').value=e.desc;
+  document.getElementById('em-amt').value=e.amount;
+  setEMType(e.type);
+  document.getElementById('entry-modal').classList.add('open');
+}
+function setEMType(t) {
+  emType=t;
+  document.getElementById('em-type-ud').className='type-btn'+(t==='ud'?' active-ud':'');
+  document.getElementById('em-type-ind').className='type-btn'+(t==='ind'?' active-ind':'');
+}
+function saveEntryModal() {
+  const desc=document.getElementById('em-desc').value.trim();
+  const amt=parseFloat(document.getElementById('em-amt').value);
+  if(!desc||isNaN(amt)||amt<=0)return;
+  const e=entries.find(e=>e.id===editingEntryId);
+  if(e){e.desc=desc;e.amount=amt;e.type=emType;}
+  closeEntryModal(); scheduleSave(); render();
+}
+function deleteEntry() {
+  if(!confirm('Slet denne postering?'))return;
+  entries=entries.filter(e=>e.id!==editingEntryId);
+  closeEntryModal(); scheduleSave(); render();
+}
+function closeEntryModal() { document.getElementById('entry-modal').classList.remove('open'); editingEntryId=null; }
+
+function render() {
+  const ck=curKey();
+  document.getElementById('header-month').textContent=keyLabel(ck);
+  document.getElementById('month-label').textContent=keyLabel(ck);
+  const totalInd=payments.filter(p=>p.state==='paid').length*RATE+entries.filter(e=>e.type==='ind').reduce((s,e)=>s+e.amount,0);
+  const totalUd=entries.filter(e=>e.type==='ud').reduce((s,e)=>s+e.amount,0);
+  const saldo=STARTSALDO+totalInd-totalUd;
+  const sel=document.getElementById('m-saldo');
+  sel.textContent=fmt(saldo); sel.className='hero-saldo-value'+(saldo<0?' neg':'');
+  document.getElementById('m-ind').textContent=fmt(totalInd);
+  document.getElementById('m-ud').textContent=fmt(totalUd);
+
+  document.getElementById('members-grid').innerHTML=members.map(m=>{
+    const col=avcol(m.id),mMonths=memberMonths(m.id),curState=getState(m.id,ck);
+    const futurePaid=mMonths.filter(k=>k>ck&&getState(m.id,k)).length;
+    const pastUnpaid=getMonths().filter(k=>k<ck&&!getState(m.id,k)).length;
+    let stTxt,stCls,cardCls='';
+    if(futurePaid>0&&curState==='prepaid'){stTxt='FORUDBETALT RESTEN';stCls='s-gold';cardCls='c-gold';}
+    else if(futurePaid>0){stTxt='FORUDBETALT '+futurePaid+' MD';stCls='s-blue';cardCls='c-blue';}
+    else if(curState==='prepaid'){stTxt='FORUDBETALT';stCls='s-gold';cardCls='c-gold';}
+    else if(curState==='paid'){stTxt='BETALT';stCls='s-green';cardCls='c-green';}
+    else if(pastUnpaid>0){stTxt='MANGLER '+(pastUnpaid+1)+' MD';stCls='s-red';}
+    else{stTxt='IKKE BETALT';stCls='s-muted';}
+    const allChipMonths=[...new Set([...getMonths(),...mMonths])].sort();
+    const chips=allChipMonths.map(k=>{
+      const state=getState(m.id,k),isCur=k===ck,isFut=k>ck;
+      let cls,clickable=true;
+      if(state==='prepaid'){cls='ch-prepaid';clickable=false;}
+      else if(isCur&&state==='paid')cls='ch-cur-paid';
+      else if(isCur&&!state)cls='ch-cur-unpaid';
+      else if(!isFut&&state==='paid')cls='ch-past-paid';
+      else if(!isFut&&!state)cls='ch-past-unpaid';
+      else if(isFut&&state==='paid')cls='ch-future-paid';
+      else return '';
+      const oc=clickable?`onclick="quickToggle(${m.id},'${k}')"` :'';
+      return `<span class="chip ${cls}" ${oc} style="${clickable?'':'cursor:default;'}" title="${keyLabel(k)}">${keyShort(k)}</span>`;
+    }).join('');
+    const lastChip=allChipMonths[allChipMonths.length-1]||ck;
+    const {y:ny,m:nm}=parseKey(lastChip);
+    const nextKey=nm===11?mkKey(ny+1,0):mkKey(ny,nm+1);
+    const plusChip=`<span class="chip ch-cur-unpaid" style="opacity:0.4" onclick="quickToggle(${m.id},'${nextKey}')" title="${keyLabel(nextKey)}">+</span>`;
+    return `<div class="member-card ${cardCls}">
+      <div class="member-top">
+        <div class="avatar" style="background:${col.bg};color:${col.txt}">${initials(m.name)}</div>
+        <div style="flex:1;min-width:0;"><div class="name-display">${m.name}</div><div class="member-status ${stCls}">${stTxt}</div></div>
+      </div>
+      <div class="paid-months">${chips}${plusChip}</div>
+      <div class="card-actions">
+        <button class="edit-btn" onclick="openModal(${m.id})">Rediger</button>
+        <button class="del-btn" onclick="removeMember(${m.id})">Slet</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const paidEntries=payments.filter(p=>p.state==='paid').map(p=>{
+    const mem=members.find(m=>m.id===p.memberId);
+    return {label:mem?mem.name:'Slettet',month:p.monthKey,amount:RATE,type:'kontingent',id:null};
+  });
+  const allEntries=[...paidEntries,...entries.map(e=>({label:e.desc,month:e.monthKey,amount:e.amount,type:e.type,id:e.id}))]
+    .sort((a,b)=>b.month.localeCompare(a.month)||a.label.localeCompare(b.label));
+  document.getElementById('log-body').innerHTML=allEntries.length===0
+    ?'<tr><td colspan="5" class="empty-td">Ingen posteringer endnu</td></tr>'
+    :allEntries.map(e=>{
+      const isPos=e.type==='ind'||e.type==='kontingent';
+      const typeLabel=e.type==='kontingent'?'Kontingent':e.type==='ind'?'Indtægt':'Udgift';
+      const editBtn=e.id!==null?`<button class="row-edit-btn" onclick="openEntryModal(${e.id})">rediger</button>`:`<span></span>`;
+      return `<tr><td>${e.label}</td><td><span class="tag">${keyLabel(e.month)}</span></td><td><span class="tag" style="${isPos?'color:var(--green)':'color:var(--red)'}">${typeLabel}</span></td><td class="${isPos?'a-pos':'a-neg'}">${isPos?'+':'-'}${fmt(e.amount)}</td><td>${editBtn}</td></tr>`;
+    }).join('');
+}
+
+function exportCSV() {
+  const rows=[['Navn/Beskrivelse','Type','Måned','Beløb (kr)']];
+  payments.filter(p=>p.state==='paid').forEach(p=>{const m=members.find(m=>m.id===p.memberId);rows.push([m?m.name:'Slettet','Kontingent',keyLabel(p.monthKey),RATE]);});
+  entries.forEach(e=>rows.push([e.desc,e.type==='ind'?'Indtægt':'Udgift',keyLabel(e.monthKey),(e.type==='ud'?-1:1)*e.amount]));
+  const csv=rows.map(r=>r.join(';')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download='eastside_outlaws_kassebog.csv'; a.click();
+}
+
+setEntryType('ud');
+loadFromDB();
+</script>
+</body>
+</html>
