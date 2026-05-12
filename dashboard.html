@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Eastside Outlaws – Kassen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--surface:#111111;--card:#161616;--border:#222222;--border-soft:#1e1e1e;--orange:#f05a1a;--green:#27c97a;--green-dim:#0f5c35;--blue:#4a9ede;--blue-dim:#163a5c;--gold:#d4a843;--gold-dim:#6b4e12;--red:#e8463a;--text:#ede8e0;--text-2:#9a9088;--text-3:#555048;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{display:flex;align-items:center;gap:14px;}
+.logo-emblem{width:36px;height:36px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;flex-shrink:0;}
+.logo-text{display:flex;flex-direction:column;}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:var(--text);line-height:1;}
+.logo-sub{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;color:var(--orange);text-transform:uppercase;line-height:1;margin-top:2px;}
+.readonly-badge{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-3);border:1px solid var(--border);padding:4px 12px;border-radius:3px;}
+.container{max-width:900px;margin:0 auto;padding:2.5rem 2rem 6rem;}
+.hero{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2rem 2.5rem;margin-bottom:2rem;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent 60%);}
+.hero::after{content:'KASSEN';position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:80px;letter-spacing:6px;color:var(--border);pointer-events:none;user-select:none;}
+.hero-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:0;position:relative;z-index:1;}
+.hero-saldo{padding-right:2.5rem;border-right:1px solid var(--border);margin-right:2.5rem;}
+.hero-saldo-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--text-3);margin-bottom:4px;}
+.hero-saldo-value{font-family:'Bebas Neue',sans-serif;font-size:56px;letter-spacing:2px;line-height:1;color:var(--orange);}
+.hero-saldo-value.neg{color:var(--red);}
+.stat{display:flex;flex-direction:column;justify-content:center;}
+.stat-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;}
+.stat-value{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;}
+.sv-green{color:var(--green);}.sv-red{color:var(--red);}.sv-white{color:var(--text);}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--text-3);display:flex;align-items:center;gap:10px;}
+.section-title::before{content:'';display:block;width:16px;height:1px;background:var(--orange);}
+.members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px;margin-bottom:2.5rem;}
+.member-card{background:var(--card);border:1px solid var(--border-soft);border-radius:6px;padding:1.1rem;display:flex;flex-direction:column;gap:12px;}
+.member-card.c-green{border-color:var(--green-dim);background:linear-gradient(135deg,var(--card) 60%,rgba(39,201,122,0.04));box-shadow:inset 0 0 0 1px var(--green-dim);}
+.member-card.c-blue{border-color:var(--blue-dim);background:linear-gradient(135deg,var(--card) 60%,rgba(74,158,222,0.04));}
+.member-card.c-gold{border-color:var(--gold-dim);background:linear-gradient(135deg,var(--card) 60%,rgba(212,168,67,0.04));}
+.member-top{display:flex;align-items:center;gap:11px;}
+.avatar{width:38px;height:38px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;position:relative;overflow:hidden;}
+.avatar::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent);}
+.name-display{font-size:14px;font-weight:600;color:var(--text);line-height:1.2;}
+.member-status{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:2px;display:flex;align-items:center;gap:5px;}
+.member-status::before{content:'';display:block;width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.s-green{color:var(--green);}.s-green::before{background:var(--green);box-shadow:0 0 5px var(--green);}
+.s-blue{color:var(--blue);}.s-blue::before{background:var(--blue);}
+.s-gold{color:var(--gold);}.s-gold::before{background:var(--gold);}
+.s-red{color:var(--red);}.s-red::before{background:var(--red);}
+.s-muted{color:var(--text-3);}.s-muted::before{background:var(--text-3);}
+.paid-months{display:flex;flex-wrap:wrap;gap:4px;}
+.chip{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:3px;border:1px solid transparent;user-select:none;}
+.ch-prepaid{background:rgba(212,168,67,0.15);color:var(--gold);border-color:var(--gold-dim);}
+.ch-past-paid{background:rgba(39,201,122,0.1);color:var(--green);border-color:var(--green-dim);}
+.ch-past-unpaid{background:transparent;color:var(--text-3);border-color:var(--border);}
+.ch-cur-paid{background:var(--green);color:#000;border-color:var(--green);font-weight:700;box-shadow:0 0 8px rgba(39,201,122,0.3);}
+.ch-cur-unpaid{background:transparent;color:var(--text-3);border-color:var(--border);}
+.ch-future-paid{background:rgba(74,158,222,0.12);color:var(--blue);border-color:var(--blue-dim);}
+.log-wrap{background:var(--surface);border:1px solid var(--border-soft);border-radius:6px;overflow:hidden;margin-bottom:1rem;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-3);text-align:left;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--card);}
+tbody td{padding:11px 16px;border-bottom:1px solid var(--border-soft);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,0.015);}
+.a-pos{color:var(--green);font-family:'Bebas Neue',sans-serif;font-size:16px;text-align:right;letter-spacing:1px;}
+.a-neg{color:var(--red);font-family:'Bebas Neue',sans-serif;font-size:16px;text-align:right;letter-spacing:1px;}
+.tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:rgba(255,255,255,0.04);color:var(--text-3);border:1px solid var(--border);}
+.empty-td{text-align:center;padding:2.5rem !important;color:var(--text-3);font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase;font-size:12px;}
+.updated{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:var(--text-3);text-align:center;margin-top:2rem;text-transform:uppercase;}
+@media(max-width:640px){
+  .hero-grid{grid-template-columns:1fr 1fr;gap:1.25rem;}
+  .hero-saldo{grid-column:1/-1;border-right:none;border-bottom:1px solid var(--border);padding-right:0;margin-right:0;padding-bottom:1rem;margin-bottom:0.25rem;}
+  .hero-saldo-value{font-size:44px;}
+  .hero::after{display:none;}
+  .header{padding:0 1.25rem;}
+  .container{padding:1.5rem 1.25rem 5rem;}
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo">
+    <div class="logo-emblem">EO</div>
+    <div class="logo-text">
+      <div class="logo-main">Eastside Outlaws</div>
+      <div class="logo-sub">Kassen</div>
+    </div>
+  </div>
+  <span class="readonly-badge">Kun visning</span>
+</header>
+<div class="container" id="app">
+  <div style="text-align:center;padding:4rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;color:var(--text-3);text-transform:uppercase;">Henter data...</div>
+</div>
+<script>
+const SUPABASE_URL='https://uidgsgkxevfrnnnjvjzt.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpZGdzZ2t4ZXZmcm5ubmp2anp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODU1OTYsImV4cCI6MjA5NDE2MTU5Nn0.59kIdN3ve7c1Ql89lujnt8ypu7qjDrTRvtcrbqgKlPM';
+const API=SUPABASE_URL+'/rest/v1/kassen';
+const HEADERS={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
+const RATE=200,STARTSALDO=4707.5,START={y:2026,m:4};
+const DA_MONTHS=['januar','februar','marts','april','maj','juni','juli','august','september','oktober','november','december'];
+const AVCOLS=[{bg:'#1a2e45',txt:'#5b9bd5'},{bg:'#162e1f',txt:'#27c97a'},{bg:'#2e1a0a',txt:'#f05a1a'},{bg:'#2e1210',txt:'#e8463a'},{bg:'#1e1630',txt:'#9b80e0'},{bg:'#1e2810',txt:'#9ac84a'},{bg:'#0f2020',txt:'#4ecdc4'},{bg:'#281430',txt:'#e07ab0'}];
+const mkKey=(y,m)=>y+'-'+String(m+1).padStart(2,'0');
+const parseKey=k=>{const[y,m]=k.split('-');return{y:+y,m:+m-1};};
+const keyLabel=k=>{const{y,m}=parseKey(k);return DA_MONTHS[m][0].toUpperCase()+DA_MONTHS[m].slice(1)+' '+y;};
+const keyShort=k=>keyLabel(k).split(' ')[0].slice(0,3).toUpperCase();
+const initials=n=>n.split(' ').filter(Boolean).map(w=>w[0]).join('').toUpperCase().slice(0,2)||'??';
+const fmt=n=>Math.abs(n).toLocaleString('da-DK')+' kr';
+const avcol=id=>AVCOLS[id%AVCOLS.length];
+function curKey(){const n=new Date();return mkKey(n.getFullYear(),n.getMonth());}
+function getMonths(){const now=new Date(),months=[];let y=START.y,m=START.m;while(y<now.getFullYear()||(y===now.getFullYear()&&m<=now.getMonth())){months.push(mkKey(y,m));m++;if(m>11){m=0;y++;}}return months;}
+function getState(payments,memberId,key){const p=payments.find(p=>p.memberId===memberId&&p.monthKey===key);return p?p.state:null;}
+
+async function load() {
+  try {
+    const res=await fetch(API+'?id=eq.main',{headers:HEADERS});
+    const rows=await res.json();
+    if(rows&&rows[0]&&rows[0].data) render(rows[0].data);
+    else render(null);
+  } catch(e){ render(null); }
+}
+
+function render(data) {
+  const app=document.getElementById('app');
+  if(!data||!data.members||data.members.length===0){
+    app.innerHTML='<div style="text-align:center;padding:4rem;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:3px;color:var(--text-3);text-transform:uppercase;">Ingen data endnu</div>';
+    return;
+  }
+  const {members,payments,entries=[]}=data;
+  const ck=curKey(),months=getMonths();
+  const totalInd=payments.filter(p=>p.state==='paid').length*RATE+entries.filter(e=>e.type==='ind').reduce((s,e)=>s+e.amount,0);
+  const totalUd=entries.filter(e=>e.type==='ud').reduce((s,e)=>s+e.amount,0);
+  const saldo=STARTSALDO+totalInd-totalUd;
+
+  const memberCards=members.map(m=>{
+    const col=avcol(m.id),curState=getState(payments,m.id,ck);
+    const memberPaidKeys=payments.filter(p=>p.memberId===m.id).map(p=>p.monthKey);
+    const futurePaid=memberPaidKeys.filter(k=>k>ck).length;
+    const pastUnpaid=months.filter(k=>k<ck&&!getState(payments,m.id,k)).length;
+    let stTxt,stCls,cardCls='';
+    if(futurePaid>0&&curState==='prepaid'){stTxt='FORUDBETALT RESTEN';stCls='s-gold';cardCls='c-gold';}
+    else if(futurePaid>0){stTxt='FORUDBETALT '+futurePaid+' MD';stCls='s-blue';cardCls='c-blue';}
+    else if(curState==='prepaid'){stTxt='FORUDBETALT';stCls='s-gold';cardCls='c-gold';}
+    else if(curState==='paid'){stTxt='BETALT';stCls='s-green';cardCls='c-green';}
+    else if(pastUnpaid>0){stTxt='MANGLER '+(pastUnpaid+1)+' MD';stCls='s-red';}
+    else{stTxt='IKKE BETALT';stCls='s-muted';}
+    const allChipMonths=[...new Set([...months,...memberPaidKeys])].sort();
+    const chips=allChipMonths.map(k=>{
+      const state=getState(payments,m.id,k),isCur=k===ck,isFut=k>ck;
+      let cls;
+      if(state==='prepaid')cls='ch-prepaid';
+      else if(isCur&&state==='paid')cls='ch-cur-paid';
+      else if(isCur&&!state)cls='ch-cur-unpaid';
+      else if(!isFut&&state==='paid')cls='ch-past-paid';
+      else if(!isFut&&!state)cls='ch-past-unpaid';
+      else if(isFut&&state==='paid')cls='ch-future-paid';
+      else return '';
+      return `<span class="chip ${cls}" title="${keyLabel(k)}">${keyShort(k)}</span>`;
+    }).join('');
+    return `<div class="member-card ${cardCls}"><div class="member-top"><div class="avatar" style="background:${col.bg};color:${col.txt}">${initials(m.name)}</div><div style="flex:1;min-width:0;"><div class="name-display">${m.name}</div><div class="member-status ${stCls}">${stTxt}</div></div></div><div class="paid-months">${chips}</div></div>`;
+  }).join('');
+
+  const paidEntries=payments.filter(p=>p.state==='paid').map(p=>{const mem=members.find(m=>m.id===p.memberId);return{label:mem?mem.name:'Slettet',month:p.monthKey,amount:RATE,type:'kontingent'};});
+  const allEntries=[...paidEntries,...entries.map(e=>({label:e.desc,month:e.monthKey,amount:e.amount,type:e.type}))].sort((a,b)=>b.month.localeCompare(a.month)||a.label.localeCompare(b.label));
+  const logRows=allEntries.length===0?'<tr><td colspan="4" class="empty-td">Ingen posteringer endnu</td></tr>':allEntries.map(e=>{const isPos=e.type==='ind'||e.type==='kontingent';const typeLabel=e.type==='kontingent'?'Kontingent':e.type==='ind'?'Indtægt':'Udgift';return`<tr><td>${e.label}</td><td><span class="tag">${keyLabel(e.month)}</span></td><td><span class="tag" style="${isPos?'color:var(--green)':'color:var(--red)'}">${typeLabel}</span></td><td class="${isPos?'a-pos':'a-neg'}">${isPos?'+':'-'}${fmt(e.amount)}</td></tr>`;}).join('');
+
+  const now=new Date();
+  const updStr=now.toLocaleDateString('da-DK',{day:'numeric',month:'long',year:'numeric'})+' kl. '+now.toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});
+
+  app.innerHTML=`
+    <div class="hero"><div class="hero-grid">
+      <div class="hero-saldo"><div class="hero-saldo-label">Samlet Saldo</div><div class="hero-saldo-value${saldo<0?' neg':''}">${fmt(saldo)}</div></div>
+      <div class="stat"><div class="stat-label">Startsaldo apr</div><div class="stat-value sv-white">4.707,5 kr</div></div>
+      <div class="stat"><div class="stat-label">Ind fra maj</div><div class="stat-value sv-green">${fmt(totalInd)}</div></div>
+      <div class="stat"><div class="stat-label">Ud fra maj</div><div class="stat-value sv-red">${fmt(totalUd)}</div></div>
+    </div></div>
+    <div class="section-head" style="margin-bottom:12px;"><span class="section-title">Medlemmer</span><span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;color:var(--orange);text-transform:uppercase;">${keyLabel(ck)}</span></div>
+    <div class="members-grid">${memberCards}</div>
+    <div class="section-head"><span class="section-title">Alle Posteringer</span></div>
+    <div class="log-wrap"><table><thead><tr><th>Beskrivelse</th><th>Måned</th><th>Type</th><th style="text-align:right;">Beløb</th></tr></thead><tbody>${logRows}</tbody></table></div>
+    <p class="updated">Sidst opdateret: ${updStr}</p>`;
+}
+
+load();
+setInterval(load,60000);
+</script>
+</body>
+</html>
